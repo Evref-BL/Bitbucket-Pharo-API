@@ -1,8 +1,8 @@
 Class {
 	#name : 'BaselineOfBitbucketPharoAPI',
 	#superclass : 'BaselineOf',
-	#category : 'BitbucketPharoAPI',
-	#package : 'BitbucketPharoAPI'
+	#category : 'BaselineOfBitbucketPharoAPI',
+	#package : 'BaselineOfBitbucketPharoAPI'
 }
 
 { #category : 'baselines' }
@@ -16,9 +16,14 @@ BaselineOfBitbucketPharoAPI >> baseline: spec [
 
 { #category : 'baselines' }
 BaselineOfBitbucketPharoAPI >> defineDependencies: spec [
+
 	spec
 		baseline: 'NeoJSON'
 		with: [ spec repository: 'github://svenvc/NeoJSON/repository' ].
+		
+		spec
+		baseline: 'Mocketry'
+		with: [ spec repository: 'github://dionisiydk/Mocketry' ]
 ]
 
 { #category : 'baselines' }
