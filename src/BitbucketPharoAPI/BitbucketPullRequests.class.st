@@ -6,6 +6,17 @@ Class {
 }
 
 { #category : 'api - get' }
+BitbucketPullRequests >> diffOf: pullRequestId inRepository: repositorySlug ofProject: projectKey [
+	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/diff"
+
+	| endpoint |
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/pull-requests/' , pullRequestId asString, '/diff'.
+
+	^ self get: endpoint withParams: Dictionary new
+]
+
+{ #category : 'api - get' }
 BitbucketPullRequests >> get: pullRequestId inRepository: repositorySlug ofProject: projectKey [
 	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}"
 	
