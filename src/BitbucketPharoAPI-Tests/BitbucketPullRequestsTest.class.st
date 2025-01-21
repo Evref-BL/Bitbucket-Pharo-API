@@ -9,6 +9,43 @@ Class {
 }
 
 { #category : 'tests' }
+BitbucketPullRequestsTest >> testDiffOfInRepositoryOfProject [
+
+	| hostUrl gitlabApi result client path bitbucketPullRequests pullRequestID projectKey repoSlug pullRequestDiff |
+	"Given"
+	hostUrl := 'www.url.com'.
+	client := ZnClient new.
+
+	gitlabApi := BitbucketApi new
+		             bearerToken: 'token';
+		             host: hostUrl;
+		             client: client.
+		
+	bitbucketPullRequests := BitbucketPullRequests new bitbucketApi:
+		                         gitlabApi.
+
+	pullRequestID := 24.
+	projectKey := 'AAA'.
+	repoSlug := 'project'.
+
+	pullRequestDiff := { (#diff -> pullRequestID) } asDictionary.
+
+	path := '/projects/' , projectKey , '/repos/' , repoSlug
+	        , '/pull-requests/' , pullRequestID asString, '/diff'.
+	(bitbucketPullRequests stub get: path withParams: Dictionary new)
+		willReturn: pullRequestDiff.
+
+	"When"
+	result := bitbucketPullRequests
+		          diffOf: pullRequestID
+		          inRepository: repoSlug
+		          ofProject: projectKey.
+
+	"Then"
+	self assert: result equals: pullRequestDiff
+]
+
+{ #category : 'tests' }
 BitbucketPullRequestsTest >> testGetInRepositoryOfProject [
 
 	| hostUrl gitlabApi result client path bitbucketPullRequests pullRequestID projectKey repoSlug pullRequest |
