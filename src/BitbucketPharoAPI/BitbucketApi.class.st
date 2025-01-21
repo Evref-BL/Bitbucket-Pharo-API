@@ -5,7 +5,8 @@ Class {
 		'client',
 		'bearerToken',
 		'host',
-		'basePath'
+		'basePath',
+		'output'
 	],
 	#category : 'BitbucketPharoAPI',
 	#package : 'BitbucketPharoAPI'
@@ -61,7 +62,21 @@ BitbucketApi >> initialize [
 		          accept: ZnMimeType applicationJson;
 		          yourself.
 
-	basePath := 'rest/api/1.0'
+	basePath := 'rest/api/1.0'.
+	
+	output := 'dict'
+]
+
+{ #category : 'accessing' }
+BitbucketApi >> output [
+
+	^ output
+]
+
+{ #category : 'accessing' }
+BitbucketApi >> output: anObject [
+
+	output := anObject
 ]
 
 { #category : 'private' }
@@ -76,4 +91,9 @@ BitbucketApi >> prepareClient [
 { #category : 'ressources' }
 BitbucketApi >> pullRequests [
 	^ BitbucketPullRequests new bitbucketApi: self.
+]
+
+{ #category : 'ressources' }
+BitbucketApi >> repositories [
+	^ BitbucketRepositories new bitbucketApi: self.
 ]
