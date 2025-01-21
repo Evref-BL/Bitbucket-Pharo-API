@@ -10,7 +10,7 @@ This is a Pharo client for the [Bitbucket Server REST API](https://docs.atlassia
 ```st
 Metacello new
   githubUser: 'Evref-BL' project: 'Bitbucket-Pharo-API' commitish: 'develop' path: 'src';
-  baseline: 'Bitbucket-Pharo-API';
+  baseline: 'BitbucketPharoAPI';
   onConflict: [ :ex | ex useIncoming ];
   load
 ```
