@@ -26,5 +26,8 @@ BitbucketRessource >> get: path withParams: paramsDict [
 
 	response := bitbucketApi client get.
 
-	^ NeoJSONReader fromString: response
+	bitbucketApi output = 'dict' ifTrue: [
+		^ NeoJSONReader fromString: response ].
+
+	^ response
 ]

@@ -38,3 +38,36 @@ BitbucketRessourceTest >> testGetWithParams [
 	params keysAndValuesDo: [ :key :value |
 		self assert: (client request url query at: key) equals: value ]
 ]
+
+{ #category : 'tests' }
+BitbucketRessourceTest >> testGetWithParamsJsonOutput [
+
+	| hostUrl result client object endpoint params bitbucketApi bitbucketRessource |
+	"Given"
+	hostUrl := 'https://www.url.com'.
+	client := ZnClient new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client;
+							output: 'json'.
+
+	endpoint := '/endpoint'.
+	params := { ('param' -> 'value') } asDictionary.
+
+	object := { (#id -> 1) } asDictionary.
+
+	bitbucketRessource := BitbucketRessource new bitbucketApi:
+		                      bitbucketApi.
+
+	client stub get willReturn: (NeoJSONWriter toString: object).
+
+	"When"
+	result := bitbucketRessource get: endpoint withParams: params.
+
+	"Then"
+	self assert: result equals: (NeoJSONWriter toString: object).
+	params keysAndValuesDo: [ :key :value |
+		self assert: (client request url query at: key) equals: value ]
+]
