@@ -31,3 +31,19 @@ BitbucketRessource >> get: path withParams: paramsDict [
 
 	^ response
 ]
+
+{ #category : 'api' }
+BitbucketRessource >> postJson: endpoint withData: data [
+
+	| response |
+	bitbucketApi prepareClient.
+	bitbucketApi client path: bitbucketApi basePath , endpoint.
+
+	bitbucketApi client entity:
+		(ZnEntity with: (NeoJSONWriter toString: data)).
+	bitbucketApi client contentType: 'application/json'.
+
+	response := bitbucketApi client post.
+
+	^ NeoJSONReader fromString: response
+]

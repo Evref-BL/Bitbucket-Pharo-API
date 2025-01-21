@@ -71,3 +71,39 @@ BitbucketRessourceTest >> testGetWithParamsJsonOutput [
 	params keysAndValuesDo: [ :key :value |
 		self assert: (client request url query at: key) equals: value ]
 ]
+
+{ #category : 'tests' }
+BitbucketRessourceTest >> testPostJsonWithData [
+
+	| hostUrl result client endpoint gitlabRessource data responseMessage response bitbucketApi |
+	"Given"
+	hostUrl := 'https://www.url.com'.
+	client := ZnClient new.
+
+	bitbucketApi := BitbucketApi new
+		             bearerToken: 'token';
+		             host: hostUrl;
+		             client: client.
+
+	endpoint := '/endpoint'.
+	data := { ('param' -> 'value') } asDictionary.
+
+	responseMessage := 'success'.
+	response := '{ "message": "' , responseMessage , '" }'.
+
+	gitlabRessource := BitbucketRessource new bitbucketApi: bitbucketApi.
+
+	client stub post willReturn: response.
+
+	"When"
+	result := gitlabRessource postJson: endpoint withData: data.
+
+	"Then"
+	self assert: (result at: #message) equals: responseMessage.
+	self
+		assert: client request entity contentType asString
+		equals: 'application/json'.
+	self
+		assert: client request entity string
+		equals: (NeoJSONWriter toString: data)
+]

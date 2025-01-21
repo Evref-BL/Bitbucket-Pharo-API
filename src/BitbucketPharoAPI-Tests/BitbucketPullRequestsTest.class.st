@@ -77,3 +77,37 @@ BitbucketPullRequestsTest >> testGetInRepositoryOfProject [
 	"Then"
 	self assert: result equals: pullRequest
 ]
+
+{ #category : 'tests' }
+BitbucketPullRequestsTest >> testPostCommentInPullRequestInRepositoryOfProject [
+
+	| hostUrl result client endpoint response bitbucketApi bitbucketPullRequests projectKey repositorySlug pullRequestId comment |
+	"Given"
+	hostUrl := 'www.url.com'.
+	client := Mock new.
+
+	bitbucketApi := BitbucketApi new
+		             bearerToken: 'token';
+		             host: hostUrl;
+		             client: client.
+	bitbucketPullRequests := BitbucketPullRequests new bitbucketApi: bitbucketApi.
+
+	projectKey := 'OOO'.
+	repositorySlug := 'my project'.
+	pullRequestId := 4.
+	
+	comment := BitbucketPullRequestComment createWithText: 'test'.
+	
+	endpoint := '/projects/' , projectKey , '/repos/', repositorySlug, '/pull-requests/', pullRequestId asString, '/comments'.
+
+	response := { (#message -> 'message') } asDictionary.
+
+	(bitbucketPullRequests stub postJson: endpoint withData: comment asDictionary) willReturn:
+		response.
+
+	"When"
+	result := bitbucketPullRequests postComment: comment inPullRequest: pullRequestId inRepository: repositorySlug  ofProject: projectKey. 
+
+	"Then"
+	self assert: result equals: response
+]
