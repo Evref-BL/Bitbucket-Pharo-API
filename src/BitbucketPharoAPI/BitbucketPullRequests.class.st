@@ -25,3 +25,16 @@ BitbucketPullRequests >> get: pullRequestId inRepository: repositorySlug ofProje
 	
 	^self get: endpoint withParams: Dictionary new. 
 ]
+
+{ #category : 'api - post' }
+BitbucketPullRequests >> postComment: bitbucketPullRequestComment inPullRequest: pullRequestId inRepository: repositorySlug ofProject: projectKey [
+	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/comments"
+
+	| endpoint data |
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/pull-requests/' , pullRequestId asString , '/comments'.
+
+	data := bitbucketPullRequestComment asDictionary.
+
+	^ self postJson: endpoint withData: data
+]
