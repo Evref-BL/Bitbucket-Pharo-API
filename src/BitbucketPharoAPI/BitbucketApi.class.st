@@ -72,3 +72,8 @@ BitbucketApi >> prepareClient [
    bearerToken ifNotNil: [ :token |
 		client headerAt: #Authorization put: 'Bearer ' , token ].
 ]
+
+{ #category : 'ressources' }
+BitbucketApi >> pullRequests [
+	^ BitbucketPullRequests new bitbucketApi: self.
+]
