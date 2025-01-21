@@ -33,6 +33,10 @@ BaselineOfBitbucketPharoAPI >> defineGroups: spec [
 
 { #category : 'baselines' }
 BaselineOfBitbucketPharoAPI >> definePackages: spec [
+
+	spec package: 'BitbucketPharoAPI'.
+	
 	spec
-		package: 'BitbucketPharoAPI'
+		package: 'BitbucketPharoAPI-Tests'
+		with: [ spec requires: #( 'BitbucketPharoAPI' 'Mocketry' ) ].
 ]
