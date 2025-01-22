@@ -31,6 +31,11 @@ BitbucketApi >> bearerToken: token [
 	
 ]
 
+{ #category : 'ressources' }
+BitbucketApi >> branches [
+	^BitbucketBranches new bitbucketApi: self.
+]
+
 { #category : 'accessing' }
 BitbucketApi >> client [
 
