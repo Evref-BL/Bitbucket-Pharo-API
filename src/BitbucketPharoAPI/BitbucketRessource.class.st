@@ -47,3 +47,19 @@ BitbucketRessource >> postJson: endpoint withData: data [
 
 	^ NeoJSONReader fromString: response
 ]
+
+{ #category : 'api' }
+BitbucketRessource >> put: endpoint withData: data [
+
+	| response |
+	bitbucketApi prepareClient.
+	bitbucketApi client path: bitbucketApi basePath , endpoint.
+
+	data keysAndValuesDo: [ :key :value |
+		bitbucketApi client addPart:
+			(ZnMimePart fieldName: key value: value) ].
+
+	response := bitbucketApi client put.
+	
+	^ NeoJSONReader fromString: response
+]

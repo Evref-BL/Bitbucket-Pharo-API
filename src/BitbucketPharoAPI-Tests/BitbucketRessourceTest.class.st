@@ -107,3 +107,38 @@ BitbucketRessourceTest >> testPostJsonWithData [
 		assert: client request entity string
 		equals: (NeoJSONWriter toString: data)
 ]
+
+{ #category : 'tests' }
+BitbucketRessourceTest >> testPutWithData [
+
+	| hostUrl result client endpoint gitlabRessource data responseMessage response bitbucketApi |
+	"Given"
+	hostUrl := 'https://www.url.com'.
+	client := ZnClient new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+
+	endpoint := '/endpoint'.
+	data := { ('param' -> 'value') } asDictionary.
+
+	responseMessage := 'success'.
+	response := '{ "message": "' , responseMessage , '" }'.
+
+	gitlabRessource := BitbucketRessource new bitbucketApi: bitbucketApi.
+
+	client stub put willReturn: response.
+
+	"When"
+	result := gitlabRessource put: endpoint withData: data.
+
+	"Then"
+	self assert: (result at: #message) equals: responseMessage.
+
+	client request entity parts doWithIndex: [ :part :index |
+		self assert: part fieldName equals: (data keys at: index).
+
+		self assert: part fieldValue equals: (data values at: index) ]
+]
