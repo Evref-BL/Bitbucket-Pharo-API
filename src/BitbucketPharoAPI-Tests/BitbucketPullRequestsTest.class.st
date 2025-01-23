@@ -9,6 +9,49 @@ Class {
 }
 
 { #category : 'tests' }
+BitbucketPullRequestsTest >> testCreateFromRefToRefInRepositoryOfProject [
+
+	| hostUrl result client endpoint response bitbucketApi bitbucketPullRequests projectKey repositorySlug fromRef toRef title data |
+	"Given"
+	hostUrl := 'www.url.com'.
+	client := Mock new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+	bitbucketPullRequests := BitbucketPullRequests new bitbucketApi:
+		                         bitbucketApi.
+
+	projectKey := 'OOO'.
+	repositorySlug := 'my project'.
+	
+	fromRef := 'test'.
+	toRef := 'dev'.
+	title := 'a title'.
+	
+	data := {
+		        (#title -> title).
+		        (#fromRef -> { (#id -> fromRef) } asDictionary).
+		        (#toRef -> { (#id -> toRef) } asDictionary) } asDictionary.
+
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/pull-requests'.
+
+	response := { (#message -> 'message') } asDictionary.
+
+	(bitbucketPullRequests stub
+		 postJson: endpoint
+		 withData: data) willReturn: response.
+
+	"When"
+	result := bitbucketPullRequests
+		          create: title fromRef: fromRef  toRef: toRef inRepository: repositorySlug ofProject: projectKey. 
+	"Then"
+	self assert: result equals: response
+]
+
+{ #category : 'tests' }
 BitbucketPullRequestsTest >> testDiffOfInRepositoryOfProject [
 
 	| hostUrl gitlabApi result client path bitbucketPullRequests pullRequestID projectKey repoSlug pullRequestDiff |
