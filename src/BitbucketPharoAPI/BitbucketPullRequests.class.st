@@ -5,6 +5,22 @@ Class {
 	#package : 'BitbucketPharoAPI'
 }
 
+{ #category : 'api - post' }
+BitbucketPullRequests >> create: title fromRef: fromRefId toRef: toRefId inRepository: repositorySlug ofProject: projectKey [
+	"POST /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests"
+
+	| endpoint data |
+	endpoint := '/projects/', projectKey, '/repos/', repositorySlug, '/pull-requests'.
+	
+	data := { 
+		#title -> title.
+		#fromRef -> { #id -> fromRefId } asDictionary.
+		#toRef -> { #id -> toRefId } asDictionary. 		
+	} asDictionary.
+	
+	^ self postJson: endpoint withData: data. 
+]
+
 { #category : 'api - get' }
 BitbucketPullRequests >> diffOf: pullRequestId inRepository: repositorySlug ofProject: projectKey [
 	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/diff"
