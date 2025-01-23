@@ -21,3 +21,15 @@ BitbucketRepositories >> rawFile: filePath withParams: paramsDict inRepository: 
 
 	^ result
 ]
+
+{ #category : 'api - put' }
+BitbucketRepositories >> updateFile: filePath withParams: bitbucketUpdateFileParams inRepository: repositorySlug ofProject: projectKey [
+	"PUT /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path:.*}?at&type&blame&noContent"
+
+	| endpoint |
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/browse/' , filePath.
+
+
+	^ self put: endpoint withData: bitbucketUpdateFileParams asDictionary
+]
