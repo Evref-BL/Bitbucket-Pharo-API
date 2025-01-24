@@ -33,6 +33,31 @@ BitbucketRessource >> get: path withParams: paramsDict [
 ]
 
 { #category : 'api' }
+BitbucketRessource >> getAll: endpoint withParams: paramsDict [
+
+	| values results |
+	bitbucketApi prepareClient.
+	bitbucketApi client path: bitbucketApi basePath , endpoint.
+
+	paramsDict keysAndValuesDo: [ :key :value |
+		bitbucketApi client queryAt: key put: value ].
+
+	values := OrderedCollection new.
+
+	[
+	results := bitbucketApi client get.
+	results := (NeoJSONReader on: results readStream) next.
+	values addAll: (results at: #values).
+	results at: #nextPageStart ifPresent: [
+		bitbucketApi client
+			queryAt: #start
+			put: (results at: #nextPageStart) ].
+	results at: #isLastPage ] whileFalse.
+
+	^ values
+]
+
+{ #category : 'api' }
 BitbucketRessource >> postJson: endpoint withData: data [
 
 	| response |
