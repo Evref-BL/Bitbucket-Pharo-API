@@ -9,6 +9,41 @@ Class {
 }
 
 { #category : 'tests' }
+BitbucketRessourceTest >> testGetAllWithParams [
+	"Given"
+
+	| hostUrl client endpoint params objectId object bitbucketApi bitbucketRessource result response |
+	hostUrl := 'https://www.url.com'.
+	client := ZnClient new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+
+	endpoint := '/endpoint'.
+	params := { ('param' -> 'value') } asDictionary.
+
+	objectId := 1.
+	object := { (#id -> objectId) } asDictionary.
+
+	bitbucketRessource := BitbucketRessource new bitbucketApi:
+		                      bitbucketApi.
+		
+		
+	response := { #values -> { object }. #isLastPage -> true } asDictionary.
+	client stub get willReturn: (NeoJSONWriter toString: response).
+		
+
+	"When"
+	result := bitbucketRessource getAll: endpoint withParams: params.
+
+	"Then"
+	self assert: result size equals: 1.
+	self assert: result first equals: object
+]
+
+{ #category : 'tests' }
 BitbucketRessourceTest >> testGetWithParams [
 
 	| hostUrl result client object endpoint params bitbucketApi bitbucketRessource |
