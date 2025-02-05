@@ -6,6 +6,21 @@ Class {
 }
 
 { #category : 'api - get' }
+BitbucketCommits >> allInBranch: branchRef inRepository: repositorySlug ofProject: projectKey [
+	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits"
+
+	| endpoint params |
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/commits'.
+	
+	params := { 
+		#until -> branchRef
+	} asDictionary.
+	
+	^ self getAll: endpoint withParams: params
+]
+
+{ #category : 'api - get' }
 BitbucketCommits >> allWithParams: paramsDictionary inRepository: repositorySlug ofProject: projectKey [
 	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits"
 	| endpoint |

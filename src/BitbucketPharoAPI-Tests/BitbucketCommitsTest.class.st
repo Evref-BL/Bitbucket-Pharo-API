@@ -9,6 +9,45 @@ Class {
 }
 
 { #category : 'tests' }
+BitbucketCommitsTest >> testAllInBranchInRepositoryOfProject [
+
+	| hostUrl client bitbucketApi projectKey repositorySlug endpoint response result params bitbucketCommits branch |
+	"Given"
+	hostUrl := 'www.url.com'.
+	client := Mock new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+
+	bitbucketCommits := BitbucketCommits new bitbucketApi: bitbucketApi.
+
+	projectKey := 'OOO'.
+	repositorySlug := 'my project'.
+	branch := 'dev'.
+
+	params := { (#until -> branch) } asDictionary.
+
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/commits'.
+
+	response := { (#commitId -> '1') } asDictionary.
+
+	(bitbucketCommits stub getAll: endpoint withParams: params)
+		willReturn: response.
+
+	"When"
+	result := bitbucketCommits
+		          allInBranch: branch 
+		          inRepository: repositorySlug
+		          ofProject: projectKey.
+
+	"Then"
+	self assert: result equals: response
+]
+
+{ #category : 'tests' }
 BitbucketCommitsTest >> testAllWithParamsInRepositoryOfProject [
 
 	"Given"
