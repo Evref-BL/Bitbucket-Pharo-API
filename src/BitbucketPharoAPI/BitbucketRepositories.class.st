@@ -6,6 +6,15 @@ Class {
 }
 
 { #category : 'api - get' }
+BitbucketRepositories >> allInProject: projectKey [
+	"GET /rest/api/1.0/projects/{projectKey}/repos"
+	| endpoint |
+	endpoint := '/projects/' , projectKey , '/repos'.
+
+	^ self getAll: endpoint withParams: Dictionary new
+]
+
+{ #category : 'api - get' }
 BitbucketRepositories >> rawFile: filePath withParams: paramsDict inRepository: repositorySlug ofProject: projectKey [
 	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/raw/{path:.*}?at&markup&hardwrap&htmlEscape"
 

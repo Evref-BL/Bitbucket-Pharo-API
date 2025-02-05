@@ -9,6 +9,37 @@ Class {
 }
 
 { #category : 'tests' }
+BitbucketRepositoriesTest >> testAllInProject [
+
+	| hostUrl client bitbucketApi projectKey endpoint response result bitbucketRepos |
+	hostUrl := 'www.url.com'.
+	client := Mock new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+
+	bitbucketRepos := BitbucketRepositories new bitbucketApi:
+		                  bitbucketApi.
+
+	projectKey := 'OOO'.
+
+	endpoint := '/projects/' , projectKey , '/repos'.
+
+	response := { (#repo -> '1') } asDictionary.
+
+	(bitbucketRepos stub getAll: endpoint withParams: Dictionary new)
+		willReturn: response.
+
+	"When"
+	result := bitbucketRepos allInProject: projectKey.
+
+	"Then"
+	self assert: result equals: response
+]
+
+{ #category : 'tests' }
 BitbucketRepositoriesTest >> testRawFileWithParamsInRepositoryOfProject [
 
 	| hostUrl gitlabApi result client filePath response params bitbucketRepositories projectKey repoSlug |
