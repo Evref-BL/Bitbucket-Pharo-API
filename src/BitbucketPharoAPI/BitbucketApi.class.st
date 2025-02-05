@@ -48,6 +48,11 @@ BitbucketApi >> client: anObject [
 	client := anObject
 ]
 
+{ #category : 'ressources' }
+BitbucketApi >> commits [
+	^BitbucketCommits new bitbucketApi: self.
+]
+
 { #category : 'accessing' }
 BitbucketApi >> host [
 
