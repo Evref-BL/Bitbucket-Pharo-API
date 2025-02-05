@@ -64,3 +64,14 @@ BitbucketCommits >> allWithParams: paramsDictionary inRepository: repositorySlug
 	endpoint := '/projects/', projectKey, '/repos/', repositorySlug, '/commits'.
 	^self getAll: endpoint withParams: paramsDictionary.
 ]
+
+{ #category : 'api - get' }
+BitbucketCommits >> diffOf: commitId inRepository: repositorySlug ofProject: projectKey [
+	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}/diff?autoSrcPath&contextLines&since&srcPath&whitespace&withComments"
+
+	| endpoint |
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/commits/' , commitId , '/diff'.
+
+	^ self get: endpoint withParams: Dictionary new
+]
