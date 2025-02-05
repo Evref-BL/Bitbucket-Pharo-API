@@ -99,6 +99,11 @@ BitbucketApi >> prepareClient [
 ]
 
 { #category : 'ressources' }
+BitbucketApi >> projects [
+	^BitbucketProjects new bitbucketApi: self.
+]
+
+{ #category : 'ressources' }
 BitbucketApi >> pullRequests [
 	^ BitbucketPullRequests new bitbucketApi: self.
 ]
