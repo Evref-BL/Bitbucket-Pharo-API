@@ -17,6 +17,56 @@ BitbucketPullRequests >> activitiesOf: pullRequestId inRepository: repositorySlu
 ]
 
 { #category : 'api - get' }
+BitbucketPullRequests >> allSince: since until: until withParams: paramsDictionary inRepository: repositorySlug ofProject: projectKey [
+	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests?direction&at&state&order&withAttributes&withProperties"
+
+	"There is no parameter in the API that allows us to directly get all the commits between two dates, so we have to do it manually."
+	| results lastDate endpoint pullRequests createdDateTimestamp |
+	bitbucketApi prepareClient.
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/pull-requests'.
+	bitbucketApi client path: bitbucketApi basePath , endpoint.
+
+	paramsDictionary keysAndValuesDo: [ :key :value |
+		bitbucketApi client queryAt: key put: value ].
+
+	pullRequests := OrderedCollection new.
+
+	[
+	results := bitbucketApi client get.
+	results := (NeoJSONReader on: results readStream) next.
+	pullRequests addAll: (results at: #values).
+	results at: #nextPageStart ifPresent: [
+		bitbucketApi client
+			queryAt: #start
+			put: (results at: #nextPageStart) ].
+
+	(results at: #isLastPage)
+		ifTrue: [ false ]
+		ifFalse: [
+			createdDateTimestamp := pullRequests last at: #createdDate.
+			lastDate := DateAndTime fromUnixTime: createdDateTimestamp / 1000.
+			since asDate <= lastDate ] ] whileTrue.
+
+	^ pullRequests select: [ :pullRequest |
+		  | createdDate |
+		  createdDate := DateAndTime fromUnixTime:
+			                 (pullRequest at: #createdDate) / 1000.
+		  createdDate >= since asDate asDateAndTime and:
+			  createdDate <= until asDate asDateAndTime ]
+]
+
+{ #category : 'api - get' }
+BitbucketPullRequests >> allWithParams: paramsDictionary inRepository: repositorySlug  ofProject: projectKey [
+	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests?direction&at&state&order&withAttributes&withProperties"
+
+	| endpoint |
+	endpoint := '/projects/', projectKey, '/repos/', repositorySlug, '/pull-requests'.
+	
+	^self getAll: endpoint withParams: paramsDictionary. 
+]
+
+{ #category : 'api - get' }
 BitbucketPullRequests >> commitsOf: pullRequestId inRepository: repositorySlug ofProject: projectKey [
 	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/commits"
 
