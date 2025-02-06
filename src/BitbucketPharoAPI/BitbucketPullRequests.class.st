@@ -16,6 +16,16 @@ BitbucketPullRequests >> activitiesOf: pullRequestId inRepository: repositorySlu
 	^ self getAll: endpoint withParams: Dictionary new.
 ]
 
+{ #category : 'api - get' }
+BitbucketPullRequests >> commitsOf: pullRequestId inRepository: repositorySlug ofProject: projectKey [
+	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/commits"
+
+	| endpoint |
+	endpoint := '/projects/', projectKey, '/repos/', repositorySlug, '/pull-requests/', pullRequestId asString, '/commits'.
+	
+	^self getAll: endpoint withParams: Dictionary new. 
+]
+
 { #category : 'api - post' }
 BitbucketPullRequests >> create: title fromRef: fromRefId toRef: toRefId inRepository: repositorySlug ofProject: projectKey [
 	"POST /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests"
