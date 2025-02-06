@@ -5,6 +5,17 @@ Class {
 	#package : 'BitbucketPharoAPI'
 }
 
+{ #category : 'api - get' }
+BitbucketPullRequests >> activitiesOf: pullRequestId inRepository: repositorySlug ofProject: projectKey [
+	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/activities"
+
+	| endpoint |
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/pull-requests/' , pullRequestId asString , '/activities'.
+
+	^ self getAll: endpoint withParams: Dictionary new.
+]
+
 { #category : 'api - post' }
 BitbucketPullRequests >> create: title fromRef: fromRefId toRef: toRefId inRepository: repositorySlug ofProject: projectKey [
 	"POST /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests"
