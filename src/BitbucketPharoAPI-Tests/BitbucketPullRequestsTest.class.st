@@ -47,6 +47,45 @@ BitbucketPullRequestsTest >> testActivitiesOfInRepositoryOfProject [
 ]
 
 { #category : 'tests' }
+BitbucketPullRequestsTest >> testCommitsOfInRepositoryOfProject [
+
+	| hostUrl gitlabApi result client path bitbucketPullRequests pullRequestID projectKey repoSlug commit |
+	"Given"
+	hostUrl := 'www.url.com'.
+	client := ZnClient new.
+
+	gitlabApi := BitbucketApi new
+		             bearerToken: 'token';
+		             host: hostUrl;
+		             client: client.
+
+	bitbucketPullRequests := BitbucketPullRequests new bitbucketApi:
+		                         gitlabApi.
+
+	pullRequestID := 24.
+	projectKey := 'AAA'.
+	repoSlug := 'project'.
+
+	commit := { (#commitId -> 'id') }
+		                       asDictionary.
+
+	path := '/projects/' , projectKey , '/repos/' , repoSlug
+	        , '/pull-requests/' , pullRequestID asString , '/commits'.
+
+	(bitbucketPullRequests stub getAll: path withParams: Dictionary new)
+		willReturn: commit.
+
+	"When"
+	result := bitbucketPullRequests
+		          commitsOf: pullRequestID
+		          inRepository: repoSlug
+		          ofProject: projectKey.
+
+	"Then"
+	self assert: result equals: commit
+]
+
+{ #category : 'tests' }
 BitbucketPullRequestsTest >> testCreateFromRefToRefInRepositoryOfProject [
 
 	| hostUrl result client endpoint response bitbucketApi bitbucketPullRequests projectKey repositorySlug fromRef toRef title data |
