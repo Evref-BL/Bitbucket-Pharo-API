@@ -112,3 +112,8 @@ BitbucketApi >> pullRequests [
 BitbucketApi >> repositories [
 	^ BitbucketRepositories new bitbucketApi: self.
 ]
+
+{ #category : 'ressources' }
+BitbucketApi >> users [
+	^BitbucketUsers new bitbucketApi: self.
+]
