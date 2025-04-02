@@ -31,6 +31,16 @@ BitbucketRepositories >> rawFile: filePath withParams: paramsDict inRepository: 
 	^ result
 ]
 
+{ #category : 'api - get' }
+BitbucketRepositories >> repo: aRepoKey ofProject: aProjectKey [
+	"GET /rest/api/1.0/projects/{aProjectKey}/repos/{aRepoKey}"
+
+	| endpoint |
+	endpoint := '/projects/' , aProjectKey , '/repos/' , aRepoKey.
+
+	^ self get: endpoint withParams: Dictionary new
+]
+
 { #category : 'api - put' }
 BitbucketRepositories >> updateFile: filePath withParams: bitbucketUpdateFileParams inRepository: repositorySlug ofProject: projectKey [
 	"PUT /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path:.*}?at&type&blame&noContent"

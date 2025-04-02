@@ -72,6 +72,37 @@ BitbucketRepositoriesTest >> testRawFileWithParamsInRepositoryOfProject [
 ]
 
 { #category : 'tests' }
+BitbucketRepositoriesTest >> testRepoOfProject [
+
+	| hostUrl client bitbucketApi projectKey endpoint response result bitbucketRepos repoKey |
+	hostUrl := 'www.url.com'.
+	client := Mock new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+
+	bitbucketRepos := BitbucketRepositories new bitbucketApi:
+		                  bitbucketApi.
+
+	projectKey := 'OOO'.
+	repoKey := 'rep'.
+	endpoint := '/projects/' , projectKey , '/repos/' , repoKey.
+
+	response := { (#slug -> repoKey). #id -> 1 } asDictionary.
+
+	(bitbucketRepos stub get: endpoint withParams: Dictionary new)
+		willReturn: response.
+
+	"When"
+	result := bitbucketRepos repo: 'rep' ofProject: 'OOO'.
+
+	"Then"
+	self assert: result equals: response
+]
+
+{ #category : 'tests' }
 BitbucketRepositoriesTest >> testUpdateFileWithParamsInRepositoryOfProject [
 
 	| hostUrl gitlabApi result client filePath response bitbucketRepositories projectKey repoSlug bitbucketUpdateFileParams endpoint |
