@@ -21,5 +21,5 @@ BitbucketProjects >> get: projectKey [
 	| endpoint |
 	endpoint := '/projects/' , projectKey.
 
-	^ self getAll: endpoint withParams: Dictionary new
+	^ self get: endpoint withParams: Dictionary new
 ]

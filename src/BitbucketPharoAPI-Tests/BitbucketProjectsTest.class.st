@@ -56,7 +56,7 @@ BitbucketProjectsTest >> testGet [
 
 	response := {(#key -> 'hello')} asDictionary.
 
-	(bitbucketProjects stub getAll: endpoint withParams: Dictionary new)
+	(bitbucketProjects stub get: endpoint withParams: Dictionary new)
 		willReturn: {
 				(#key -> 'hello').
 				(#id -> 1).
