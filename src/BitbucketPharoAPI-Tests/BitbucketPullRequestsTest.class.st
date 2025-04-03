@@ -143,44 +143,6 @@ BitbucketPullRequestsTest >> testAllWithParamsInRepositoryOfProject [
 ]
 
 { #category : 'tests' }
-BitbucketPullRequestsTest >> testCommentsInPullRequestInRepositoryOfProject [
-
-	| hostUrl gitlabApi result client path bitbucketPullRequests pullRequestID projectKey repoSlug commit |
-	"Given"
-	hostUrl := 'www.url.com'.
-	client := ZnClient new.
-
-	gitlabApi := BitbucketApi new
-		             bearerToken: 'token';
-		             host: hostUrl;
-		             client: client.
-
-	bitbucketPullRequests := BitbucketPullRequests new bitbucketApi:
-		                         gitlabApi.
-
-	pullRequestID := 24.
-	projectKey := 'AAA'.
-	repoSlug := 'project'.
-
-	commit := { (#version -> 1) } asDictionary.
-
-	path := '/projects/' , projectKey , '/repos/' , repoSlug
-	        , '/pull-requests/' , pullRequestID asString , '/comments'.
-
-	(bitbucketPullRequests stub getAll: path withParams: Dictionary new)
-		willReturn: commit.
-
-	"When"
-	result := bitbucketPullRequests
-		          commentsInPullRequest: pullRequestID
-		          inRepository: repoSlug
-		          ofProject: projectKey.
-
-	"Then"
-	self assert: result equals: commit
-]
-
-{ #category : 'tests' }
 BitbucketPullRequestsTest >> testCommitsOfInRepositoryOfProject [
 
 	| hostUrl gitlabApi result client path bitbucketPullRequests pullRequestID projectKey repoSlug commit |

@@ -77,17 +77,6 @@ BitbucketPullRequests >> allWithParams: paramsDictionary inRepository: repositor
 	^self getAll: endpoint withParams: paramsDictionary. 
 ]
 
-{ #category : 'api - post' }
-BitbucketPullRequests >> commentsInPullRequest: pullRequestId inRepository: repositorySlug ofProject: projectKey [
-	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/comments"
-
-	| endpoint |
-	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
-	            , '/pull-requests/' , pullRequestId asString , '/comments'.
-
-	^ self getAll: endpoint withParams: {#path -> '.'} asDictionary 
-]
-
 { #category : 'api - get' }
 BitbucketPullRequests >> commitsOf: pullRequestId inRepository: repositorySlug ofProject: projectKey [
 	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/commits"
