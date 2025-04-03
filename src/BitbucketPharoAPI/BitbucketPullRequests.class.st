@@ -5,6 +5,17 @@ Class {
 	#package : 'BitbucketPharoAPI'
 }
 
+{ #category : 'api - post' }
+BitbucketPullRequests >> activitiesInPullRequest: pullRequestId inRepository: repositorySlug ofProject: projectKey [
+	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/comments"
+
+	| endpoint |
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/pull-requests/' , pullRequestId asString , '/activities'.
+
+	^ self getAll: endpoint withParams: Dictionary new
+]
+
 { #category : 'api - get' }
 BitbucketPullRequests >> activitiesOf: pullRequestId inRepository: repositorySlug ofProject: projectKey [
 	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/activities"
@@ -64,6 +75,17 @@ BitbucketPullRequests >> allWithParams: paramsDictionary inRepository: repositor
 	endpoint := '/projects/', projectKey, '/repos/', repositorySlug, '/pull-requests'.
 	
 	^self getAll: endpoint withParams: paramsDictionary. 
+]
+
+{ #category : 'api - post' }
+BitbucketPullRequests >> commentsInPullRequest: pullRequestId inRepository: repositorySlug ofProject: projectKey [
+	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/comments"
+
+	| endpoint |
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/pull-requests/' , pullRequestId asString , '/comments'.
+
+	^ self getAll: endpoint withParams: {#path -> '.'} asDictionary 
 ]
 
 { #category : 'api - get' }
