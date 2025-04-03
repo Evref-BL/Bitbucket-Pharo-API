@@ -40,6 +40,39 @@ BitbucketRepositoriesTest >> testAllInProject [
 ]
 
 { #category : 'tests' }
+BitbucketRepositoriesTest >> testGetOfProject [
+
+	| hostUrl client bitbucketApi projectKey endpoint response result bitbucketRepos repoKey |
+	hostUrl := 'www.url.com'.
+	client := Mock new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+
+	bitbucketRepos := BitbucketRepositories new bitbucketApi:
+		                  bitbucketApi.
+
+	projectKey := 'OOO'.
+	repoKey := 'rep'.
+	endpoint := '/projects/' , projectKey , '/repos/' , repoKey.
+
+	response := {
+		            (#slug -> repoKey).
+		            (#id -> 1) } asDictionary.
+
+	(bitbucketRepos stub get: endpoint withParams: Dictionary new)
+		willReturn: response.
+
+	"When"
+	result := bitbucketRepos get: 'rep' ofProject: 'OOO'.
+
+	"Then"
+	self assert: result equals: response
+]
+
+{ #category : 'tests' }
 BitbucketRepositoriesTest >> testRawFileWithParamsInRepositoryOfProject [
 
 	| hostUrl gitlabApi result client filePath response params bitbucketRepositories projectKey repoSlug |
@@ -69,37 +102,6 @@ BitbucketRepositoriesTest >> testRawFileWithParamsInRepositoryOfProject [
 	self assert: result equals: response.
 	params keysAndValuesDo: [ :key :value |
 		self assert: (client request url query at: key) equals: value ]
-]
-
-{ #category : 'tests' }
-BitbucketRepositoriesTest >> testRepoOfProject [
-
-	| hostUrl client bitbucketApi projectKey endpoint response result bitbucketRepos repoKey |
-	hostUrl := 'www.url.com'.
-	client := Mock new.
-
-	bitbucketApi := BitbucketApi new
-		                bearerToken: 'token';
-		                host: hostUrl;
-		                client: client.
-
-	bitbucketRepos := BitbucketRepositories new bitbucketApi:
-		                  bitbucketApi.
-
-	projectKey := 'OOO'.
-	repoKey := 'rep'.
-	endpoint := '/projects/' , projectKey , '/repos/' , repoKey.
-
-	response := { (#slug -> repoKey). #id -> 1 } asDictionary.
-
-	(bitbucketRepos stub get: endpoint withParams: Dictionary new)
-		willReturn: response.
-
-	"When"
-	result := bitbucketRepos repo: 'rep' ofProject: 'OOO'.
-
-	"Then"
-	self assert: result equals: response
 ]
 
 { #category : 'tests' }
