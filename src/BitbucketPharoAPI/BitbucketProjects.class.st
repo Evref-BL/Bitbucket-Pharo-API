@@ -13,3 +13,13 @@ BitbucketProjects >> all [
 
 	^ self getAll: endpoint withParams: Dictionary new
 ]
+
+{ #category : 'accessing' }
+BitbucketProjects >> get: projectKey [
+	"/rest/api/1.0/projects/{projectKey}"
+
+	| endpoint |
+	endpoint := '/projects/' , projectKey.
+
+	^ self get: endpoint withParams: Dictionary new
+]

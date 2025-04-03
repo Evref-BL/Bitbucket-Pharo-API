@@ -15,6 +15,16 @@ BitbucketRepositories >> allInProject: projectKey [
 ]
 
 { #category : 'api - get' }
+BitbucketRepositories >> get: aRepoKey ofProject: aProjectKey [
+	"GET /rest/api/1.0/projects/{aProjectKey}/repos/{aRepoKey}"
+
+	| endpoint |
+	endpoint := '/projects/' , aProjectKey , '/repos/' , aRepoKey.
+
+	^ self get: endpoint withParams: Dictionary new
+]
+
+{ #category : 'api - get' }
 BitbucketRepositories >> rawFile: filePath withParams: paramsDict inRepository: repositorySlug ofProject: projectKey [
 	"/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/raw/{path:.*}?at&markup&hardwrap&htmlEscape"
 
