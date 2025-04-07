@@ -13,7 +13,7 @@ This is a Pharo client for the [Bitbucket Server REST API](https://docs.atlassia
 
 ```st
 Metacello new
-  githubUser: 'Evref-BL' project: 'Bitbucket-Pharo-API' commitish: 'develop' path: 'src';
+  githubUser: 'Evref-BL' project: 'Bitbucket-Pharo-API' commitish: 'main' path: 'src';
   baseline: 'BitbucketPharoAPI';
   onConflict: [ :ex | ex useIncoming ];
   load
@@ -24,7 +24,7 @@ Metacello new
 ```st
   spec
     baseline: 'BitbucketPharoAPI' with: [
-      spec repository: 'github://Evref-BL/Bitbucket-Pharo-API:develop'
+      spec repository: 'github://Evref-BL/Bitbucket-Pharo-API:main'
     ]
 ```
 
