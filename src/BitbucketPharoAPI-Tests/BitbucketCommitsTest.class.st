@@ -174,3 +174,37 @@ BitbucketCommitsTest >> testDiffOfInRepositoryOfProject [
 	"Then"
 	self assert: result equals: response
 ]
+
+{ #category : 'tests' }
+BitbucketCommitsTest >> testGetInRepositoryOfProject [
+
+		| hostUrl client bitbucketApi projectKey repositorySlug endpoint response result bitbucketCommits commitId |
+	"Given"
+	hostUrl := 'www.url.com'.
+	client := Mock new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+
+	bitbucketCommits := BitbucketCommits new bitbucketApi: bitbucketApi.
+
+	projectKey := 'OOO'.
+	repositorySlug := 'my project'.
+	commitId := 'aaezf1'.
+
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/commits/' , commitId .
+
+	response := { (#diff -> '1') } asDictionary.
+
+	(bitbucketCommits stub get: endpoint withParams: Dictionary new)
+		willReturn: response.
+
+	"When"
+	result := bitbucketCommits get: commitId inRepository: repositorySlug ofProject: projectKey.
+	
+	"Then"
+	self assert: result equals: response
+]
