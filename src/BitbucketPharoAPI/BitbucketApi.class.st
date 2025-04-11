@@ -105,7 +105,8 @@ BitbucketApi >> projects [
 
 { #category : 'ressources' }
 BitbucketApi >> pullRequests [
-	^ BitbucketPullRequests new bitbucketApi: self.
+	"add a comment"
+	^ BitbucketPullRequests new bitbucketApi: self
 ]
 
 { #category : 'ressources' }
