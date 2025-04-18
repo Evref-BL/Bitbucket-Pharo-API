@@ -50,14 +50,20 @@ BitbucketPullRequests >> allSince: since until: until withParams: paramsDictiona
 			lastDate := DateAndTime fromUnixTime: updatedDateTimestamp / 1000.
 			since asDate <= lastDate ] ] whileTrue.
 	^ pullRequests select: [ :pullRequest |
-		  | updatedDate |
+		  | updatedDate createdDate |
 		  "We select all PR with activities at least between the date to miss nothing"
 		  updatedDate := DateAndTime fromUnixTime:
 			                 (pullRequest at: #updatedDate) / 1000.
+		  createdDate := DateAndTime fromUnixTime:
+			                 (pullRequest at: #createdDate) / 1000.
 
-		  updatedDate
-			  between: since asDate asDateAndTime
-			  and: until asDate asDateAndTime ]
+
+		  (updatedDate
+			   between: since asDate asDateAndTime
+			   and: until asDate asDateAndTime) or: [
+			  createdDate
+				  between: since asDate asDateAndTime
+				  and: until asDate asDateAndTime ] ]
 ]
 
 { #category : 'api - get' }
