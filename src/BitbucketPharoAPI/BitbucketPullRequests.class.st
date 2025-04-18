@@ -30,6 +30,8 @@ BitbucketPullRequests >> allSince: since until: until withParams: paramsDictiona
 
 	paramsDictionary keysAndValuesDo: [ :key :value |
 		bitbucketApi client queryAt: key put: value ].
+	
+	bitbucketApi client queryAt: #order put: 'NEWEST'.
 
 	pullRequests := OrderedCollection new.
 
