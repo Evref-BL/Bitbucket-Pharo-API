@@ -21,7 +21,8 @@ BitbucketPullRequests >> allSince: since until: until withParams: paramsDictiona
 	"GET /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests?direction&at&state&order&withAttributes&withProperties"
 
 	"There is no parameter in the API that allows us to directly get all the commits between two dates, so we have to do it manually."
-	| results lastDate endpoint pullRequests createdDateTimestamp |
+
+	| results lastDate endpoint pullRequests |
 	bitbucketApi prepareClient.
 	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
 	            , '/pull-requests'.
@@ -44,16 +45,19 @@ BitbucketPullRequests >> allSince: since until: until withParams: paramsDictiona
 	(results at: #isLastPage)
 		ifTrue: [ false ]
 		ifFalse: [
-			createdDateTimestamp := pullRequests last at: #createdDate.
-			lastDate := DateAndTime fromUnixTime: createdDateTimestamp / 1000.
+			| updatedDateTimestamp |
+			updatedDateTimestamp := pullRequests last at: #updatedDate.
+			lastDate := DateAndTime fromUnixTime: updatedDateTimestamp / 1000.
 			since asDate <= lastDate ] ] whileTrue.
-
 	^ pullRequests select: [ :pullRequest |
-		  | createdDate |
-		  createdDate := DateAndTime fromUnixTime:
-			                 (pullRequest at: #createdDate) / 1000.
-		  createdDate >= since asDate asDateAndTime and:
-			  createdDate <= until asDate asDateAndTime ]
+		  | updatedDate |
+		  "We select all PR with activities at least between the date to miss nothing"
+		  updatedDate := DateAndTime fromUnixTime:
+			                 (pullRequest at: #updatedDate) / 1000.
+
+		  updatedDate
+			  between: since asDate asDateAndTime
+			  and: until asDate asDateAndTime ]
 ]
 
 { #category : 'api - get' }
