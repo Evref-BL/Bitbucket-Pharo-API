@@ -165,6 +165,60 @@ BitbucketPullRequestsTest >> testAllSinceUntilWithParamsInRepositoryOfProjectInC
 ]
 
 { #category : 'tests' }
+BitbucketPullRequestsTest >> testAllSinceUntilWithParamsInRepositoryOfProjectOutside [
+
+	| hostUrl client endpoint bitbucketApi result response projectKey repositorySlug since until updatedDateAsTimestamp bitbucketPullRequests pullRequest1 params createdDateAsTimestamp |
+	"Given"
+	hostUrl := 'https://www.url.com'.
+	client := ZnClient new.
+
+	bitbucketApi := BitbucketApi new
+		                bearerToken: 'token';
+		                host: hostUrl;
+		                client: client.
+
+	bitbucketPullRequests := BitbucketPullRequests new bitbucketApi:
+		                         bitbucketApi.
+
+	projectKey := 'OOO'.
+	repositorySlug := 'my project'.
+	since := '02-02-2025'.
+	until := '02-09-2025'.
+	params := { (#state -> 'all') } asDictionary.
+
+	createdDateAsTimestamp := '02-01-2025' asDate asDateAndTime asUnixTime * 1000.
+	updatedDateAsTimestamp := ('02-17-2025' asDate asDateAndTime + 1 day)
+		                              asUnixTime * 1000.
+
+	endpoint := '/projects/' , projectKey , '/repos/' , repositorySlug
+	            , '/pull-requests'.
+
+	pullRequest1 := {
+		                (#createdDate -> createdDateAsTimestamp).
+		                (#updatedDate -> updatedDateAsTimestamp) } asDictionary.
+
+	response := {
+		            (#values -> {
+			             pullRequest1.
+ }).
+		            (#isLastPage -> true) } asDictionary.
+
+	client stub get willReturn: (NeoJSONWriter toString: response).
+
+
+	"When"
+	result := bitbucketPullRequests
+		          allSince: since
+		          until: until
+		          withParams: params
+		          inRepository: repositorySlug
+		          ofProject: projectKey.
+
+	"Then"
+	self assert: result size equals: 0
+]
+
+{ #category : 'tests' }
 BitbucketPullRequestsTest >> testAllWithParamsInRepositoryOfProject [
 
 	| hostUrl gitlabApi result client path bitbucketPullRequests projectKey repoSlug params pullRequest |
