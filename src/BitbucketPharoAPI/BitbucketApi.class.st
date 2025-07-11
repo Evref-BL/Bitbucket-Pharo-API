@@ -114,6 +114,12 @@ BitbucketApi >> repositories [
 ]
 
 { #category : 'ressources' }
+BitbucketApi >> tags [
+
+	^ BitbucketTags new bitbucketApi: self
+]
+
+{ #category : 'ressources' }
 BitbucketApi >> users [
 	^BitbucketUsers new bitbucketApi: self.
 ]
