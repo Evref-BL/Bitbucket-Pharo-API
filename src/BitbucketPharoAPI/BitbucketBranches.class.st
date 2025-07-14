@@ -16,7 +16,7 @@ BitbucketBranches >> allWithParams: paramsDict inRepository: repositorySlug ofPr
 	^ self getAll: endpoint withParams: paramsDict
 ]
 
-{ #category : 'api - post' }
+{ #category : 'as yet unclassified' }
 BitbucketBranches >> create: branchName withStartPoint: startPoint inRepository: repositorySlug ofProject: projectKey [
 	"POST /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches"
 
